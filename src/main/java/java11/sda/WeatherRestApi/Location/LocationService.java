@@ -71,6 +71,20 @@ public class LocationService {
         }
     }
 
+    public List<Location> findByName(String placeName){
+        return locationRepository.findByCityName(placeName);
+    }
+
+    public List<Location> findByRegion(String region){
+        return locationRepository.findByRegion(region);
+    }
+
+    public List<Location> findByParams(String id, float latitude, float longitude, String cityName, String region, String country){
+        return null;
+    }
+
+
+
 
 
 }

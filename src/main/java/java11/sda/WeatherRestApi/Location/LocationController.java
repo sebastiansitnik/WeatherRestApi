@@ -37,8 +37,11 @@ public class LocationController {
     }
 
     @GetMapping("/find")
-    public Location findByLatitudeAndLongitude(@RequestParam float latitude, float longitude){
-        return locationService.findByLatitudeAndLongitude(latitude,longitude);
+    public Location findByParams(@RequestParam (required = false) String id, float latitude, float longitude, String cityName, String region, String country){
+        return findByParams(id,latitude,longitude,cityName,region,country);
     }
+
+
+
 
 }

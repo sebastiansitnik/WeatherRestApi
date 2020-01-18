@@ -1,8 +1,10 @@
 package java11.sda.WeatherRestApi.Weather;
 
 import java11.sda.WeatherRestApi.Location.Location;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -10,7 +12,9 @@ import javax.persistence.ManyToOne;
 public class Weather {
 
     @Id
-    private long id;
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    private String id;
     private float temperature;
     private float pressure;
     private float humidity;
@@ -21,11 +25,11 @@ public class Weather {
     @ManyToOne
     private Location location;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
