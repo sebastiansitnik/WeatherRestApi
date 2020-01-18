@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 public class Weather {
@@ -15,11 +18,18 @@ public class Weather {
     @GeneratedValue(generator="system-uuid")
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     private String id;
+
+    @NotEmpty
     private float temperature;
+    @NotEmpty
     private float pressure;
+    @NotEmpty
     private float humidity;
+    @NotEmpty
     private String Wind_direction;
+    @NotEmpty
     private float Wind_speed;
+    @NotEmpty
     private String date;
 
     @ManyToOne

@@ -1,12 +1,16 @@
 package java11.sda.WeatherRestApi.Location;
 
+import java11.sda.WeatherRestApi.Weather.Weather;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Location {
@@ -23,6 +27,17 @@ public class Location {
     private String region;
     @NotEmpty
     private String country;
+    @OneToMany
+    private List<Weather> weathers = new ArrayList<>();
+
+    public List<Weather> getWeathers() {
+        return weathers;
+    }
+
+    public void setWeathers(List<Weather> weathers) {
+        this.weathers = weathers;
+    }
+
 
     public Location() {
     }
