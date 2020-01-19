@@ -5,8 +5,10 @@ import java11.sda.WeatherRestApi.Location.LocationDTO;
 import java11.sda.WeatherRestApi.Location.LocationDTOTransformer;
 import java11.sda.WeatherRestApi.Location.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -98,6 +100,22 @@ public class WeatherService {
             return weatherDTOTransformer.toDto(weather);
         }
 
+    }
+
+    public List<WeatherDTO> sortByDate(Boolean ascending){
+
+        Sort sort;
+        Sort.Direction sortDirection;
+        String sortProperties = "date";
+
+        if (ascending){
+            sortDirection = Sort.Direction.ASC;
+        } else {
+            sortDirection = Sort.Direction.DESC;
+        }
+        sort = Sort.by(sortDirection,sortProperties);
+
+        return weatherRepository.findAll(sort).stream().map(weatherDTOTransformer::toDto).collect(Collectors.toList());
     }
 
 

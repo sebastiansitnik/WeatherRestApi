@@ -3,7 +3,10 @@ package java11.sda.WeatherRestApi.Weather;
 
 import java11.sda.WeatherRestApi.Location.Location;
 import java11.sda.WeatherRestApi.Location.LocationDTO;
+import javafx.beans.DefaultProperty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,7 +28,7 @@ public class WeatherController {
         return weatherService.create(weather);
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
     public List<WeatherDTO> getAll(){
         return weatherService.getAll();
     }
@@ -53,5 +56,10 @@ public class WeatherController {
     @GetMapping("/FindByDate")
     public List<WeatherDTO> findByDate(@RequestParam String date){
         return weatherService.findByDate(date);
+    }
+
+    @GetMapping
+    public List<WeatherDTO> getAllSorted(@RequestParam(required = false, defaultValue = "true") boolean ascending){
+        return weatherService.sortByDate(ascending);
     }
 }
