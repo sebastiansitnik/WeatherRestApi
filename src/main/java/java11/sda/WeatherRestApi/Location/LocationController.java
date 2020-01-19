@@ -17,27 +17,27 @@ public class LocationController {
     }
 
     @PostMapping
-    public Location createLocation(@RequestBody Location location){
+    public LocationDTO createLocation(@RequestBody LocationDTO location){
         return locationService.create(location);
     }
 
     @GetMapping
-    public List<Location> readAllLocations(){
+    public List<LocationDTO> readAllLocations(){
         return locationService.readAll();
     }
 
     @PutMapping
-    public Location updateLocation(@RequestBody Location location){
+    public LocationDTO updateLocation(@RequestBody LocationDTO location){
         return locationService.update(location);
     }
 
     @DeleteMapping
-    public Location deleteLocation(@RequestParam String id){
+    public LocationDTO deleteLocation(@RequestParam String id){
         return locationService.delete(id);
     }
 
     @GetMapping("/find")
-    public Location findByParams(@RequestParam (required = false) String id, float latitude, float longitude, String cityName, String region, String country){
+    public LocationDTO findByParams(@RequestParam (required = false) String id, float latitude, float longitude, String cityName, String region, String country){
         return findByParams(id,latitude,longitude,cityName,region,country);
     }
 

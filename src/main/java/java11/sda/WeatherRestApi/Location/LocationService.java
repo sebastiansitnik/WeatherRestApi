@@ -4,50 +4,58 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class LocationService {
 
     private final LocationRepository locationRepository;
+    private final LocationDTOTransformer locationDTOTransformer;
 
-    public LocationService(LocationRepository locationRepository) {
+    public LocationService(LocationRepository locationRepository, LocationDTOTransformer locationDTOTransformer) {
         this.locationRepository = locationRepository;
+        this.locationDTOTransformer = locationDTOTransformer;
     }
 
-    Location create(Location location){
+    LocationDTO create(LocationDTO locationDTO){
+        Location location = locationDTOTransformer.toEntity(locationDTO);
         boolean isTaken = locationTaken(location);
 
         if (isTaken){
             throw new IllegalArgumentException();
         } else {
-             return locationRepository.save(location);
+            locationRepository.save(location);
+            return locationDTOTransformer.toDto(location);
         }
     }
 
-    Location update(Location location){
+    LocationDTO update(LocationDTO locationDTO){
+        Location location = new Location();
+
         boolean isTaken = locationTaken(location);
 
         if (isTaken){
-            return locationRepository.save(location);
+            locationRepository.save(location);
+            return locationDTOTransformer.toDto(location);
         } else {
             throw new NoSuchElementException();
         }
     }
 
-    Location delete(String id){
+    LocationDTO delete(String id){
 
-        Location locationForDelete = findById(id);
+        LocationDTO locationForDelete = findById(id);
         if (locationForDelete == null){
             throw new NoSuchElementException();
         } else {
-            locationRepository.delete(locationForDelete);
+            locationRepository.delete(locationDTOTransformer.toEntity(locationForDelete));
         }
 
         return locationForDelete;
     }
 
-    List<Location> readAll(){
-        return locationRepository.findAll();
+    List<LocationDTO> readAll(){
+        return locationRepository.findAll().stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
     }
 
     private boolean locationTaken(Location location){
@@ -57,26 +65,26 @@ public class LocationService {
                 != null;
     }
 
-    public Location findById(String id){
-        return locationRepository.findById(id);
+    public LocationDTO findById(String id){
+        return locationDTOTransformer.toDto(locationRepository.findById(id).get());
     }
 
-    public Location findByLatitudeAndLongitude(float latitude, float longitude){
+    public LocationDTO findByLatitudeAndLongitude(float latitude, float longitude){
         Location location = locationRepository.findByLatitudeAndLongitude(latitude,longitude);
 
         if (location == null){
             throw new NoSuchElementException();
         } else {
-            return location;
+            return locationDTOTransformer.toDto(location);
         }
     }
 
-    public List<Location> findByName(String placeName){
-        return locationRepository.findByCityName(placeName);
+    public List<LocationDTO> findByName(String placeName){
+        return locationRepository.findByCityName(placeName).stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
     }
 
-    public List<Location> findByRegion(String region){
-        return locationRepository.findByRegion(region);
+    public List<LocationDTO> findByRegion(String region){
+        return locationRepository.findByRegion(region).stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
     }
 
     public List<Location> findByParams(String id, float latitude, float longitude, String cityName, String region, String country){

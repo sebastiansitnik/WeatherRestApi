@@ -1,37 +1,20 @@
 package java11.sda.WeatherRestApi.Weather;
 
-import java11.sda.WeatherRestApi.Location.Location;
-import org.hibernate.annotations.GenericGenerator;
+public class WeatherDTO {
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.*;
-
-@Entity
-public class Weather {
-
-    @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
     private String id;
-
-    @NotNull
     private float temperature;
-    @NotNull
     private float pressure;
-    @NotNull
     private float humidity;
-    @NotEmpty
     private String Wind_direction;
-    @NotNull
     private float Wind_speed;
-    @NotEmpty
     private String date;
+    private String locationName;
+    private String locationId;
 
-    @ManyToOne
-    private Location location;
+    public WeatherDTO(){
+
+    }
 
     public String getId() {
         return id;
@@ -89,11 +72,19 @@ public class Weather {
         this.date = date;
     }
 
-    public Location getLocation() {
-        return location;
+    public String getLocationName() {
+        return locationName;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
+    }
+
+    public String getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(String locationId) {
+        this.locationId = locationId;
     }
 }

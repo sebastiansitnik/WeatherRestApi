@@ -3,8 +3,11 @@ package java11.sda.WeatherRestApi.Weather;
 import java11.sda.WeatherRestApi.Location.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface WeatherRepository extends JpaRepository<Weather,Integer> {
+import java.util.List;
+
+public interface WeatherRepository extends JpaRepository<Weather,String> {
 
     Weather findByDateAndLocation(String date, Location location);
-    Weather findById(String id);
+    List<Weather> findByLocation(Location location);
+
 }

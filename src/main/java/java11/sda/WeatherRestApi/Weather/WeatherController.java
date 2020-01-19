@@ -1,9 +1,12 @@
 package java11.sda.WeatherRestApi.Weather;
 
 
+import java11.sda.WeatherRestApi.Location.Location;
+import java11.sda.WeatherRestApi.Location.LocationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,24 +21,27 @@ public class WeatherController {
     }
 
     @PostMapping
-    public Weather create(@RequestBody Weather weather){
+    public WeatherDTO create(@RequestBody @Valid WeatherDTO weather){
         return weatherService.create(weather);
     }
 
     @GetMapping
-    public List<Weather> getAll(){
+    public List<WeatherDTO> getAll(){
         return weatherService.getAll();
     }
 
     @PutMapping
-    public Weather update(@RequestBody Weather weather){
+    public WeatherDTO update(@RequestBody @Valid WeatherDTO weather){
         return weatherService.update(weather);
     }
 
     @DeleteMapping
-    public Weather delete(@RequestParam String id){
+    public WeatherDTO delete(@RequestParam String id){
         return weatherService.delete(id);
     }
 
-
+    @GetMapping("/findByLocation")
+    public List<WeatherDTO> findByLocation(@RequestBody LocationDTO location){
+        return weatherService.findWeatherByLocation(location);
+    }
 }
