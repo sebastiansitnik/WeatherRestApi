@@ -44,4 +44,14 @@ public class WeatherController {
     public List<WeatherDTO> findByLocation(@RequestBody LocationDTO location){
         return weatherService.findWeatherByLocation(location);
     }
+
+    @GetMapping("/{id}")
+    public WeatherDTO findById(@PathVariable String id){
+        return weatherService.findById(id);
+    }
+
+    @GetMapping("/FindByDate")
+    public List<WeatherDTO> findByDate(@RequestParam String date){
+        return weatherService.findByDate(date);
+    }
 }

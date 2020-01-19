@@ -52,9 +52,20 @@ public class WeatherService {
 
     }
 
+    public List<WeatherDTO> findByDate(String date){
+        return weatherRepository.findByDate(date).stream().map(weatherDTOTransformer::toDto).collect(Collectors.toList());
+    }
+
     public List<WeatherDTO> findWeatherByLocation(LocationDTO locationDTO){
         return weatherRepository.findByLocation(locationDTOTransformer.toEntity(locationDTO)).stream().map(weatherDTOTransformer::toDto).collect(Collectors.toList());
     }
+
+    public WeatherDTO findById(String id){
+
+        return weatherDTOTransformer.toDto(weatherRepository.findById(id).orElseThrow(NoSuchElementException::new));
+
+    }
+
 
     private Weather find(Weather weather){
 
