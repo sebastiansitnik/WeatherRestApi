@@ -1,5 +1,6 @@
 package java11.sda.WeatherRestApi.Location;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -89,6 +90,20 @@ public class LocationService {
 
     public List<LocationDTO> findByCountry(String country){
         return locationRepository.findByCountry(country).stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
+    }
+
+    public List<LocationDTO> sortByCityName(boolean ascending){
+        Sort sort;
+        Sort.Direction sortDirection;
+        String sortProperties = "cityName";
+        if (ascending){
+            sortDirection = Sort.Direction.ASC;
+        }else {
+            sortDirection = Sort.Direction.DESC;
+        }
+        sort = Sort.by(sortDirection,sortProperties);
+
+        return locationRepository.findAll(sort).stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
     }
 
 

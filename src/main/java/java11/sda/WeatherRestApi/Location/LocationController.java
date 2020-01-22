@@ -60,6 +60,11 @@ public class LocationController {
         return locationService.findById(id);
     }
 
+    @GetMapping("/sortByCityName")
+    public List<LocationDTO> sortByCityName(@RequestParam(required = false, defaultValue = "true") boolean ascending){
+        return locationService.sortByCityName(ascending);
+    }
+
 
 
 
