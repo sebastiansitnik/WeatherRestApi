@@ -6,14 +6,21 @@ public class WeatherDTO {
     private float temperature;
     private float pressure;
     private float humidity;
-    private String Wind_direction;
-    private float Wind_speed;
+    private String windDirection;
+    private float windSpeed;
     private String date;
     private String locationName;
     private String locationId;
 
-    public WeatherDTO(){
-
+    public WeatherDTO(float temperature, float pressure, float humidity, String windDirection, float windSpeed, String date, String locationName, String locationId){
+        this.temperature = temperature;
+        this.pressure = pressure;
+        this.humidity = humidity;
+        this.windDirection = windDirection;
+        this.windSpeed = windSpeed;
+        this.date = date;
+        this.locationName = locationName;
+        this.locationId = locationId;
     }
 
     public String getId() {
@@ -48,20 +55,20 @@ public class WeatherDTO {
         this.humidity = humidity;
     }
 
-    public String getWind_direction() {
-        return Wind_direction;
+    public String getWindDirection() {
+        return windDirection;
     }
 
-    public void setWind_direction(String wind_direction) {
-        Wind_direction = wind_direction;
+    public void setWindDirection(String windDirection) {
+        this.windDirection = windDirection;
     }
 
-    public float getWind_speed() {
-        return Wind_speed;
+    public float getWindSpeed() {
+        return windSpeed;
     }
 
-    public void setWind_speed(float wind_speed) {
-        Wind_speed = wind_speed;
+    public void setWindSpeed(float windSpeed) {
+        this.windSpeed = windSpeed;
     }
 
     public String getDate() {

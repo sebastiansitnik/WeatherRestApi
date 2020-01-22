@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+import java.lang.Throwable;
 
 @Service
 public class WeatherService {
@@ -40,7 +41,7 @@ public class WeatherService {
         } else {
 
             String locationId = weather.getLocation().getId();
-            Location location = locationRepository.findById(locationId).get();
+            Location location = locationRepository.findById(locationId).orElseThrow(NoSuchElementException::new);
 
             weather.setLocation(location);
             weatherRepository.save(weather);

@@ -36,10 +36,30 @@ public class LocationController {
         return locationService.delete(id);
     }
 
-    @GetMapping("/find")
-    public LocationDTO findByParams(@RequestParam (required = false) String id, float latitude, float longitude, String cityName, String region, String country){
-        return findByParams(id,latitude,longitude,cityName,region,country);
+    @GetMapping("/findByCoordinates")
+    public LocationDTO findByLatitudeAndLongitude(@RequestParam long latitude, long longitude){
+        return locationService.findByLatitudeAndLongitude(latitude,longitude);
     }
+    @GetMapping("/findByCityName")
+    public List<LocationDTO> findByCityName(@RequestParam String cityName){
+        return locationService.findByName(cityName);
+    }
+
+    @GetMapping("/findByRegion")
+    public List<LocationDTO> findByRegion(@RequestParam String region){
+        return locationService.findByRegion(region);
+    }
+
+    @GetMapping("/findByCountry")
+    public List<LocationDTO> findByCountry(@RequestParam String country){
+        return locationService.findByCountry(country);
+    }
+
+    @GetMapping("/{id}")
+    public LocationDTO findById(@PathVariable String id){
+        return locationService.findById(id);
+    }
+
 
 
 

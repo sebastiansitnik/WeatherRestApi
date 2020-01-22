@@ -66,7 +66,7 @@ public class LocationService {
     }
 
     public LocationDTO findById(String id){
-        return locationDTOTransformer.toDto(locationRepository.findById(id).get());
+        return locationDTOTransformer.toDto(locationRepository.findById(id).orElseThrow(NoSuchElementException::new));
     }
 
     public LocationDTO findByLatitudeAndLongitude(float latitude, float longitude){
@@ -87,9 +87,11 @@ public class LocationService {
         return locationRepository.findByRegion(region).stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
     }
 
-    public List<Location> findByParams(String id, float latitude, float longitude, String cityName, String region, String country){
-        return null;
+    public List<LocationDTO> findByCountry(String country){
+        return locationRepository.findByCountry(country).stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
     }
+
+
 
 
 
