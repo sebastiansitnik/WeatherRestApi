@@ -1,8 +1,6 @@
 package java11.sda.WeatherRestApi.Weather;
 
-import java11.sda.WeatherRestApi.Location.Location;
-import java11.sda.WeatherRestApi.Location.LocationDTOTransformer;
-import java11.sda.WeatherRestApi.Location.LocationRepository;
+import java11.sda.WeatherRestApi.Location.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -17,7 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
 class WeatherServiceTest {
 
 //    @TestConfiguration
@@ -27,23 +24,34 @@ class WeatherServiceTest {
 //        public WeatherService weatherService(WeatherRepository weatherRepository,
 //                                             LocationRepository locationRepository,
 //                                             WeatherDTOTransformer weatherDTOTransformer,
-//                                             LocationDTOTransformer locationDTOTransformer) {
-//            return new WeatherService(weatherRepository,
-//                    locationRepository,weatherDTOTransformer,locationDTOTransformer);
+//                                             LocationDTOTransformer locationDTOTransformer,
+//                                             WeatherJsonService weatherJsonService,
+//                                             LocationService locationService) {
+//            return new WeatherService(weatherRepository, locationRepository,
+//                    weatherDTOTransformer, locationDTOTransformer,
+//                    weatherJsonService, locationService);
 //        }
 //
 //    }
+//    @MockBean
+//    WeatherJsonService weatherJsonService;
+//
+//    @MockBean
+//    LocationJsonService locationJsonService;
+
+    @Autowired
+    private WeatherService weatherService;
 
     @MockBean
     private WeatherRepository weatherRepository;
     @MockBean
     private LocationRepository locationRepository;
 
+    @MockBean
+    private WeatherDTOTransformer weatherDTOTransformer;
 
-
-    @Autowired
-    private WeatherService weatherService;
-
+    @MockBean
+    private LocationDTOTransformer locationDTOTransformer;
 
     @Test
     void when_add_valid_then_get_it(){
@@ -51,15 +59,23 @@ class WeatherServiceTest {
         Location location = new Location();
         location.setId("1");
         //given
-        Weather weather = new Weather(0,0,0,"s",0,"20.12.2020",location);
+        Weather weather = new Weather();
+
+        weather.setTemperature(0);
+        weather.setPressure(0);
+        weather.setHumidity(0);
+        weather.setWindDirection("S");
+        weather.setWindSpeed(0);
+        weather.setDate(" ");
+        weather.setLocation(location);
 
         WeatherDTO weatherDTO = new WeatherDTO(0,0,0,"s",0,"20.12.2020"," "," ");
         weatherDTO.setLocationId("1");
         weatherDTO.setId("1");
         //when
         Mockito.when(locationRepository.findById(weather.getLocation().getId())).thenReturn(Optional.of(location));
-
         Mockito.when(weatherRepository.findByDateAndLocation(weather.getDate(),location)).thenReturn(null);
+        Mockito.when(weatherDTOTransformer.toEntity(weatherDTO)).thenReturn(weather);
         weatherService.create(weatherDTO);
 
         //then

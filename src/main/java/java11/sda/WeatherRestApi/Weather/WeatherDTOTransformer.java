@@ -10,12 +10,17 @@ public class WeatherDTOTransformer {
         Location location = new Location();
         location.setId(weatherDTO.getLocationId());
 
+        Weather weather = new Weather();
+        weather.setTemperature(weatherDTO.getTemperature());
+        weather.setPressure(weatherDTO.getPressure());
+        weather.setHumidity(weatherDTO.getHumidity());
+        weather.setWindDirection(weatherDTO.getWindDirection());
+        weather.setWindSpeed(weatherDTO.getWindSpeed());
+        weather.setDate(weatherDTO.getDate());
+        weather.setLocation(location);
+        weather.setId(weatherDTO.getId());
 
-        return new Weather(weatherDTO.getTemperature(),
-                weatherDTO.getPressure(),weatherDTO.getHumidity(),
-                weatherDTO.getWindDirection(),
-                weatherDTO.getWindSpeed(),
-                weatherDTO.getDate(),location);
+        return weather;
     }
 
 

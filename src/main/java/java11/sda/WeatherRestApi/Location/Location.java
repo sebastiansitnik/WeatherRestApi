@@ -1,5 +1,8 @@
 package java11.sda.WeatherRestApi.Location;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java11.sda.WeatherRestApi.Weather.Weather;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -8,7 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,14 +22,18 @@ public class Location {
     @GeneratedValue(generator="system-uuid")
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     private String id;
+    @JsonProperty(value = "lon")
     private float longitude;
+    @JsonProperty(value = "lat")
     private float latitude;
+    @JsonProperty(value = "name")
     @NotEmpty
     private String cityName;
-    @Size(min = 2)
+    @NotNull
     private String region;
     @NotEmpty
     private String country;
+    @JsonIgnore
     @OneToMany
     private List<Weather> weathers = new ArrayList<>();
 

@@ -1,17 +1,25 @@
 package java11.sda.WeatherRestApi.Location;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java11.sda.WeatherRestApi.Weather.WeatherDTO;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LocationDTO {
 
     private String id;
+    @NotEmpty
     private float longitude;
+    @NotEmpty
     private float latitude;
+    @NotEmpty
     private String cityName;
+    @NotNull
     private String region;
+    @NotEmpty
     private String country;
     private List<WeatherDTO> weathers = new ArrayList<>();
 

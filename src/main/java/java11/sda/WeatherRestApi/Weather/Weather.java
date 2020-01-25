@@ -1,5 +1,7 @@
 package java11.sda.WeatherRestApi.Weather;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java11.sda.WeatherRestApi.Location.Location;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -9,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.*;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 public class Weather {
 
@@ -23,8 +26,10 @@ public class Weather {
     private float pressure;
     @NotNull
     private float humidity;
+    @JsonProperty(value = "wind_dir")
     @NotEmpty
     private String windDirection;
+    @JsonProperty(value = "wind_speed")
     @NotNull
     private float windSpeed;
     @NotEmpty
@@ -33,14 +38,7 @@ public class Weather {
     @ManyToOne
     private Location location;
 
-    public Weather(float temperature, float pressure, float humidity, String windDirection, float windSpeed, String date, Location location) {
-        this.temperature = temperature;
-        this.pressure = pressure;
-        this.humidity = humidity;
-        this.windDirection = windDirection;
-        this.windSpeed = windSpeed;
-        this.date = date;
-        this.location = location;
+    public Weather(){
     }
 
     public String getId() {

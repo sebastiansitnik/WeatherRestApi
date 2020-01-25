@@ -11,4 +11,5 @@ public interface WeatherRepository extends JpaRepository<Weather,String> {
     List<Weather> findByLocation(Location location);
     List<Weather> findByDate(String date);
 
+
 }

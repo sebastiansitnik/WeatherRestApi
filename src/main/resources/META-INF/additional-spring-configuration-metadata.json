@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "weatherstack.url",
+      "type": "java.lang.String",
+      "description": "Description for weatherstack.url."
+    },
+    {
+      "name": "weatherstack.url",
+      "type": "java.lang.String",
+      "description": "Description for weatherstack.url."
+    }
+  ] }

@@ -23,6 +23,7 @@ public class LocationDTOTransformer {
         location.setCountry(locationDTO.getCountry());
         location.setRegion(locationDTO.getRegion());
         location.setWeathers(locationDTO.getWeathers().stream().map(weatherDTOTransformer::toEntity).collect(Collectors.toList()));
+        location.setId(locationDTO.getId());
 
         return location;
     }

@@ -1,5 +1,6 @@
 package java11.sda.WeatherRestApi.Location;
 
+import java11.sda.WeatherRestApi.Location.external_api.weather_stack.LocationJsonService;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +13,12 @@ public class LocationService {
 
     private final LocationRepository locationRepository;
     private final LocationDTOTransformer locationDTOTransformer;
+    private final LocationJsonService locationJsonService;
 
-    public LocationService(LocationRepository locationRepository, LocationDTOTransformer locationDTOTransformer) {
+    public LocationService(LocationRepository locationRepository, LocationDTOTransformer locationDTOTransformer, LocationJsonService locationJsonService) {
         this.locationRepository = locationRepository;
         this.locationDTOTransformer = locationDTOTransformer;
+        this.locationJsonService = locationJsonService;
     }
 
     LocationDTO create(LocationDTO locationDTO){
@@ -55,7 +58,7 @@ public class LocationService {
         return locationForDelete;
     }
 
-    List<LocationDTO> readAll(){
+    public List<LocationDTO> readAll(){
         return locationRepository.findAll().stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
     }
 
@@ -80,8 +83,32 @@ public class LocationService {
         }
     }
 
+    private Location createNewLocationFromExternalApi(String cityName){
+        Location location = locationJsonService.getLocationFromExternalApi(cityName);
+
+        if (location != null){
+            location = locationRepository.save(location);
+        } else {
+            throw new NoSuchElementException();
+        }
+
+        return location;
+    }
+
     public List<LocationDTO> findByName(String placeName){
-        return locationRepository.findByCityName(placeName).stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
+
+        List<LocationDTO> result = locationRepository.findByCityName(placeName).stream()
+                .map(locationDTOTransformer::toDto)
+                .collect(Collectors.toList());
+
+        if (result.isEmpty()){
+
+            Location location = createNewLocationFromExternalApi(placeName);
+            LocationDTO locationDTO = locationDTOTransformer.toDto(location);
+            result.add(locationDTO);
+
+        }
+        return result;
     }
 
     public List<LocationDTO> findByRegion(String region){

@@ -62,4 +62,9 @@ public class WeatherController {
     public List<WeatherDTO> getAllSorted(@RequestParam(required = false, defaultValue = "true") boolean ascending){
         return weatherService.sortByDate(ascending);
     }
+
+    @GetMapping("/find")
+    public Weather findWeather(@RequestParam String cityName){
+        return weatherService.findWeather(cityName);
+    }
 }
