@@ -1,6 +1,5 @@
 package java11.sda.WeatherRestApi.Location.external_api.weather_stack;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java11.sda.WeatherRestApi.Location.Location;
 
 

@@ -1,7 +1,6 @@
 package java11.sda.WeatherRestApi.Location;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java11.sda.WeatherRestApi.Weather.Weather;
 import org.hibernate.annotations.GenericGenerator;

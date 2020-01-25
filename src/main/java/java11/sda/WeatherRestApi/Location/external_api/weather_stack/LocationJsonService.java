@@ -1,9 +1,7 @@
 package java11.sda.WeatherRestApi.Location.external_api.weather_stack;
 
 import java11.sda.WeatherRestApi.Location.Location;
-import javafx.application.Application;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
