@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import static java11.sda.WeatherRestApi.Weather.WeatherSortingProperties.SORTING_BY_DATE;
+
 @Service
 public class WeatherService {
 
@@ -135,16 +137,16 @@ public class WeatherService {
     }
 
     public List<WeatherDTO> sortByDate(Boolean ascending){
-        String sortProperties = "date";
+        String sortProperties = SORTING_BY_DATE.property;
 
-        Sort sort = getSorter(sortProperties,ascending);
+        Sort sort = setupSort(sortProperties,ascending);
 
         return weatherRepository.findAll(sort).stream()
                 .map(weatherDTOTransformer::toDto)
                 .collect(Collectors.toList());
     }
 
-    private Sort getSorter(String properties, boolean ascending){
+    private Sort setupSort(String properties, boolean ascending){
 
         Sort.Direction sortDirection;
 
