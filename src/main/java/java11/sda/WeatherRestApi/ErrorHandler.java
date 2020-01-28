@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.client.HttpClientErrorException.NotFound;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
@@ -20,4 +21,8 @@ public class ErrorHandler {
     public ResponseEntity<Object> noSuchElementException(NoSuchElementException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+
+
+
 }
