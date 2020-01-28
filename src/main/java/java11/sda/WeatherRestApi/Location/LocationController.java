@@ -18,7 +18,7 @@ public class LocationController {
 
     @PostMapping
     public LocationDTO createLocation(@RequestBody LocationDTO location){
-        return locationService.create(location);
+        return locationService.createLocationManually(location);
     }
 
     @GetMapping

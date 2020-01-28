@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+import static java11.sda.WeatherRestApi.Location.LocationSortProperties.PLACE_NAME;
+
 @Service
 public class LocationService {
 
@@ -21,12 +23,12 @@ public class LocationService {
         this.locationJsonService = locationJsonService;
     }
 
-    LocationDTO create(LocationDTO locationDTO){
+    LocationDTO createLocationManually(LocationDTO locationDTO){
         Location location = locationDTOTransformer.toEntity(locationDTO);
         boolean isTaken = locationTaken(location);
 
         if (isTaken){
-            throw new IllegalArgumentException();
+            throw new LocationAlreadyTakenException();
         } else {
             locationRepository.save(location);
             return locationDTOTransformer.toDto(location);
@@ -83,13 +85,13 @@ public class LocationService {
         }
     }
 
-    private Location createNewLocationFromExternalApi(String cityName){
+    private Location createLocationAutomatically(String cityName){
         Location location = locationJsonService.getLocationFromExternalApi(cityName);
 
         if (location != null){
             location = locationRepository.save(location);
         } else {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("We could not find that location.");
         }
 
         return location;
@@ -103,9 +105,8 @@ public class LocationService {
 
         if (result.isEmpty()){
 
-            Location location = createNewLocationFromExternalApi(placeName);
-            LocationDTO locationDTO = locationDTOTransformer.toDto(location);
-            result.add(locationDTO);
+            Location location = createLocationAutomatically(placeName);
+            result.add(locationDTOTransformer.toDto(location));
 
         }
         return result;
@@ -120,17 +121,23 @@ public class LocationService {
     }
 
     public List<LocationDTO> sortByCityName(boolean ascending){
-        Sort sort;
-        Sort.Direction sortDirection;
-        String sortProperties = "cityName";
-        if (ascending){
-            sortDirection = Sort.Direction.ASC;
-        }else {
-            sortDirection = Sort.Direction.DESC;
-        }
-        sort = Sort.by(sortDirection,sortProperties);
+
+        String sortProperties = PLACE_NAME.property;
+        Sort sort = setupSort(sortProperties,ascending);
 
         return locationRepository.findAll(sort).stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
+    }
+
+    private Sort setupSort(String property, boolean ascending){
+
+        Sort.Direction sortDirection;
+        if (ascending){
+            sortDirection = Sort.Direction.ASC;
+        } else {
+            sortDirection = Sort.Direction.DESC;
+        }
+        return Sort.by(sortDirection,property);
+
     }
 
 
