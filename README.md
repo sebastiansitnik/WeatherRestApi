@@ -9,11 +9,10 @@ Service design for a weather system that uses external service(weatherstack) for
 - Swagger UI
 - Maven
 
-##How too work with it
-Service is available at https://weather-rest-api.herokuapp.com/
+##Api documentation at https://weather-rest-api.herokuapp.com/swagger-ui.html
 
 ##Future Tasks
-- Create External Database for service uses
+- Create internal Database for service uses
 - Build android application for regular user
 - build android application for admin
 
