@@ -12,6 +12,7 @@ Service design for a weather system that uses external service(weatherstack) for
 ##Api documentation at https://weather-rest-api.herokuapp.com/swagger-ui.html
 
 ##Future Tasks
+- Add tests
 - Create internal Database for service uses
 - Build android application for regular user
 - build android application for admin
@@ -42,3 +43,6 @@ Implementing mechanism for searching by id and date.
 Implementing sorting mechanism by date.
 ####Task 5
 Implementing service for external api to gather data for locations and weathers.
+
+###Task4:
+###
