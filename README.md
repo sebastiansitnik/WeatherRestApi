@@ -43,6 +43,6 @@ Implementing mechanism for searching by id and date.
 Implementing sorting mechanism by date.
 ####Task 5
 Implementing service for external api to gather data for locations and weathers.
-
-###Task4:
-###
+###Task4 - Tests
+####Part 1
+Repository tests implementation.
