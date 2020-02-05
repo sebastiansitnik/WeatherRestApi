@@ -85,7 +85,6 @@ class WeatherRepositoryTest {
         Weather weather = getTestWeather();
 
         //when
-        //weatherRepository.save(weather);
         testEntityManager.persist(weather);
 
         //then
@@ -101,8 +100,8 @@ class WeatherRepositoryTest {
 
 
         //when
-        Weather addedWeather = weatherRepository.save(weather);
-        weatherRepository.delete(addedWeather);
+        testEntityManager.persist(weather);
+        testEntityManager.remove(weather);
         List<Weather> weatherList = weatherRepository.findAll();
         //then
         assertEquals(0,weatherList.size());
@@ -115,13 +114,13 @@ class WeatherRepositoryTest {
         Weather weather = getTestWeather();
 
         //when
-        Weather addedWeather = weatherRepository.save(weather);
-        addedWeather.setTemperature(15);
-        weatherRepository.save(addedWeather);
+        testEntityManager.persist(weather);
+        weather.setTemperature(15);
+        testEntityManager.persist(weather);
         List<Weather> weatherList = weatherRepository.findAll();
 
         //then
-        assertEquals(addedWeather,weatherList.get(0));
+        assertEquals(weather,weatherList.get(0));
 
     }
 
@@ -137,8 +136,8 @@ class WeatherRepositoryTest {
         String date2 = weather2.getDate();
 
         // when
-        weather1 = weatherRepository.save(weather1);
-        weather2 = weatherRepository.save(weather2);
+        testEntityManager.persist(weather1);
+        testEntityManager.persist(weather2);
 
         Weather searchedWeather1 = weatherRepository.findByDateAndLocation(date1,location1);
         Weather searchedWeather2 = weatherRepository.findByDateAndLocation(date2,location2);
@@ -164,7 +163,7 @@ class WeatherRepositoryTest {
                 //locationRepository.save(location);
 
         //when
-        weatherRepository.save(weather);
+        testEntityManager.persist(weather);
         Weather searchedWeather = weatherRepository.findByDateAndLocation(date,location);
         //then
 
