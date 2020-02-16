@@ -1,4 +1,4 @@
-package java11.sda.WeatherRestApi.Location;
+package java11.sda.WeatherRestApi.location;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

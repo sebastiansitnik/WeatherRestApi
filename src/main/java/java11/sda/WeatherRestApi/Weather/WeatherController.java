@@ -1,11 +1,7 @@
 package java11.sda.WeatherRestApi.weather;
 
-
-<<<<<<< HEAD
-import java11.sda.WeatherRestApi.Location.LocationDTO;
-=======
 import java11.sda.WeatherRestApi.location.LocationDTO;
->>>>>>> develop
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
