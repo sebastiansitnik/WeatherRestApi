@@ -1,4 +1,4 @@
-package java11.sda.WeatherRestApi.Weather;
+package java11.sda.WeatherRestApi.weather;
 
 public class WeatherDTO {
 
@@ -12,7 +12,8 @@ public class WeatherDTO {
     private String locationName;
     private String locationId;
 
-    public WeatherDTO(float temperature, float pressure, float humidity, String windDirection, float windSpeed, String date, String locationName, String locationId){
+    public WeatherDTO(String id, float temperature, float pressure, float humidity, String windDirection, float windSpeed, String date, String locationName, String locationId) {
+        this.id = id;
         this.temperature = temperature;
         this.pressure = pressure;
         this.humidity = humidity;

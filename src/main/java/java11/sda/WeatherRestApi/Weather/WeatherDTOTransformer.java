@@ -1,12 +1,12 @@
-package java11.sda.WeatherRestApi.Weather;
+package java11.sda.WeatherRestApi.weather;
 
-import java11.sda.WeatherRestApi.Location.Location;
+import java11.sda.WeatherRestApi.location.Location;
 import org.springframework.stereotype.Component;
 
 @Component
 public class WeatherDTOTransformer {
 
-    public Weather toEntity(WeatherDTO weatherDTO){
+    public Weather toEntity(WeatherDTO weatherDTO) {
         Location location = new Location();
         location.setId(weatherDTO.getLocationId());
 
@@ -23,12 +23,10 @@ public class WeatherDTOTransformer {
         return weather;
     }
 
+    public WeatherDTO toDto(Weather weather) {
 
-
-
-    public WeatherDTO toDto(Weather weather){
-
-        return new WeatherDTO(weather.getTemperature(),
+        return new WeatherDTO(weather.getId(),
+                weather.getTemperature(),
                 weather.getPressure(),
                 weather.getHumidity(),
                 weather.getWindDirection(),

@@ -1,8 +1,8 @@
-package java11.sda.WeatherRestApi.Weather;
+package java11.sda.WeatherRestApi.weather;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java11.sda.WeatherRestApi.Location.Location;
+import java11.sda.WeatherRestApi.location.Location;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -16,8 +16,8 @@ import javax.validation.constraints.*;
 public class Weather {
 
     @Id
-    @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
     @NotNull
@@ -38,7 +38,7 @@ public class Weather {
     @ManyToOne
     private Location location;
 
-    public Weather(){
+    public Weather() {
     }
 
     public String getId() {
