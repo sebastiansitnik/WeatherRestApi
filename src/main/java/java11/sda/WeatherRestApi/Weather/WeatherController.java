@@ -1,7 +1,11 @@
-package java11.sda.WeatherRestApi.Weather;
+package java11.sda.WeatherRestApi.weather;
 
 
+<<<<<<< HEAD
 import java11.sda.WeatherRestApi.Location.LocationDTO;
+=======
+import java11.sda.WeatherRestApi.location.LocationDTO;
+>>>>>>> develop
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +16,7 @@ import java.util.List;
 @RequestMapping("/weather")
 public class WeatherController {
 
-    WeatherService weatherService;
+    final WeatherService weatherService;
 
     @Autowired
     public WeatherController(WeatherService weatherService) {
@@ -20,47 +24,47 @@ public class WeatherController {
     }
 
     @PostMapping
-    public WeatherDTO create(@RequestBody @Valid WeatherDTO weather){
+    public WeatherDTO create(@RequestBody @Valid WeatherDTO weather) {
         return weatherService.create(weather);
     }
 
-    @GetMapping("/getAll")
-    public List<WeatherDTO> getAll(){
+    @GetMapping
+    public List<WeatherDTO> getAll() {
         return weatherService.getAll();
     }
 
     @PutMapping
-    public WeatherDTO update(@RequestBody @Valid WeatherDTO weather){
+    public WeatherDTO update(@RequestBody @Valid WeatherDTO weather) {
         return weatherService.update(weather);
     }
 
     @DeleteMapping
-    public WeatherDTO delete(@RequestParam String id){
+    public WeatherDTO delete(@RequestParam String id) {
         return weatherService.delete(id);
     }
 
     @GetMapping("/findByLocation")
-    public List<WeatherDTO> findByLocation(@RequestBody LocationDTO location){
+    public List<WeatherDTO> findByLocation(@RequestBody LocationDTO location) {
         return weatherService.findWeatherByLocation(location);
     }
 
     @GetMapping("/{id}")
-    public WeatherDTO findById(@PathVariable String id){
+    public WeatherDTO findById(@PathVariable String id) {
         return weatherService.findById(id);
     }
 
     @GetMapping("/FindByDate")
-    public List<WeatherDTO> findByDate(@RequestParam String date){
+    public List<WeatherDTO> findByDate(@RequestParam String date) {
         return weatherService.findByDate(date);
     }
 
-    @GetMapping
-    public List<WeatherDTO> getAllSorted(@RequestParam(required = false, defaultValue = "true") boolean ascending){
+    @GetMapping("/getAllSorted")
+    public List<WeatherDTO> getAllSorted(@RequestParam(required = false, defaultValue = "true") boolean ascending) {
         return weatherService.sortByDate(ascending);
     }
 
     @GetMapping("/find")
-    public Weather findWeather(@RequestParam String cityName){
+    public Weather findWeather(@RequestParam String cityName) {
         return weatherService.findWeather(cityName);
     }
 }

@@ -1,7 +1,6 @@
-package java11.sda.WeatherRestApi.Weather;
+package java11.sda.WeatherRestApi.weather;
 
-import java11.sda.WeatherRestApi.Location.Location;
-import java11.sda.WeatherRestApi.Location.LocationRepository;
+import java11.sda.WeatherRestApi.location.Location;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ class WeatherRepositoryTest {
     @Autowired
     private TestEntityManager testEntityManager;
 
-    private Weather getTestWeather(){
+    private Weather getTestWeather() {
         Weather weather = new Weather();
 
         Location location = new Location();
@@ -45,7 +44,7 @@ class WeatherRepositoryTest {
         return weather;
     }
 
-    private Weather getTestWeather2(){
+    private Weather getTestWeather2() {
         Weather weather = new Weather();
 
         Location location = new Location();
@@ -67,20 +66,20 @@ class WeatherRepositoryTest {
     }
 
     @Test
-    void when_there_are_no_items_in_db_then_repo_should_return_empty_list(){
+    void when_there_are_no_items_in_db_then_repo_should_return_empty_list() {
         //given
 
         //when
 
-        List<Weather>  weatherList = weatherRepository.findAll();
+        List<Weather> weatherList = weatherRepository.findAll();
 
         //then
 
-        assertEquals(0,weatherList.size());
+        assertEquals(0, weatherList.size());
     }
 
     @Test
-    void add_weather_then_does_not_thrown_there_is_no_such_element(){
+    void add_weather_then_does_not_thrown_there_is_no_such_element() {
         //given
         Weather weather = getTestWeather();
 
@@ -89,12 +88,12 @@ class WeatherRepositoryTest {
 
         //then
 
-        assertDoesNotThrow(() ->weatherRepository.findAll().stream().findAny().orElseThrow(NoSuchElementException::new));
+        assertDoesNotThrow(() -> weatherRepository.findAll().stream().findAny().orElseThrow(NoSuchElementException::new));
 
     }
 
     @Test
-    void add_weather_and_delete_it_then_return_empty_list(){
+    void add_weather_and_delete_it_then_return_empty_list() {
         //given
         Weather weather = getTestWeather();
 
@@ -104,12 +103,12 @@ class WeatherRepositoryTest {
         testEntityManager.remove(weather);
         List<Weather> weatherList = weatherRepository.findAll();
         //then
-        assertEquals(0,weatherList.size());
+        assertEquals(0, weatherList.size());
 
     }
 
     @Test
-    void add_weather_and_update_it_then_return_updated_element(){
+    void add_weather_and_update_it_then_return_updated_element() {
         //given
         Weather weather = getTestWeather();
 
@@ -120,12 +119,16 @@ class WeatherRepositoryTest {
         List<Weather> weatherList = weatherRepository.findAll();
 
         //then
+<<<<<<< HEAD
         assertEquals(weather,weatherList.get(0));
+=======
+        assertEquals(addedWeather, weatherList.get(0));
+>>>>>>> task/4-2
 
     }
 
     @Test
-    void add_weathers_then_find_elements_by_date_and_location_then_return_that_elements(){
+    void add_weathers_then_find_elements_by_date_and_location_then_return_that_elements() {
         // given
         Weather weather1 = getTestWeather();
         Location location1 = weather1.getLocation();
@@ -139,16 +142,16 @@ class WeatherRepositoryTest {
         testEntityManager.persist(weather1);
         testEntityManager.persist(weather2);
 
-        Weather searchedWeather1 = weatherRepository.findByDateAndLocation(date1,location1);
-        Weather searchedWeather2 = weatherRepository.findByDateAndLocation(date2,location2);
+        Weather searchedWeather1 = weatherRepository.findByDateAndLocation(date1, location1);
+        Weather searchedWeather2 = weatherRepository.findByDateAndLocation(date2, location2);
 
         // then
-        assertEquals(weather1,searchedWeather1);
-        assertEquals(weather2,searchedWeather2);
+        assertEquals(weather1, searchedWeather1);
+        assertEquals(weather2, searchedWeather2);
     }
 
     @Test
-    void add_weather_when_looking_for_element_by_date_and_different_location_then_return_none_weather(){
+    void add_weather_when_looking_for_element_by_date_and_different_location_then_return_none_weather() {
         //given
         Weather weather = getTestWeather();
         String date = weather.getDate();
@@ -160,11 +163,16 @@ class WeatherRepositoryTest {
         location.setRegion("Region");
         location.setCityName("City");
         location = testEntityManager.persist(location);
-                //locationRepository.save(location);
+        //locationRepository.save(location);
 
         //when
+<<<<<<< HEAD
         testEntityManager.persist(weather);
         Weather searchedWeather = weatherRepository.findByDateAndLocation(date,location);
+=======
+        weatherRepository.save(weather);
+        Weather searchedWeather = weatherRepository.findByDateAndLocation(date, location);
+>>>>>>> task/4-2
         //then
 
         assertNull(searchedWeather);
@@ -189,15 +197,14 @@ class WeatherRepositoryTest {
 
         // then
 
-        assertEquals(weather1,searchedWeather1);
-        assertEquals(weather2,searchedWeather2);
-
+        assertEquals(weather1, searchedWeather1);
+        assertEquals(weather2, searchedWeather2);
 
 
     }
 
     @Test
-    void add_weather_when_find_element_by_different_location_then_return_none_weather(){
+    void add_weather_when_find_element_by_different_location_then_return_none_weather() {
         //given
         Weather weather = getTestWeather();
 
@@ -208,20 +215,20 @@ class WeatherRepositoryTest {
         location.setRegion("Region");
         location.setCityName("City");
         location = testEntityManager.persist(location);
-                //locationRepository.save(location);
+        //locationRepository.save(location);
         //when
         testEntityManager.persist(weather);
         Location finalLocation = location;
         //then
 
-        assertThrows(NoSuchElementException.class,() ->
-            weatherRepository.findByLocation(finalLocation).stream().findAny().orElseThrow(NoSuchElementException::new)
-         );
+        assertThrows(NoSuchElementException.class, () ->
+                weatherRepository.findByLocation(finalLocation).stream().findAny().orElseThrow(NoSuchElementException::new)
+        );
 
     }
 
     @Test
-    void add_weathers_then_find_by_different_date_and_get_empty_list(){
+    void add_weathers_then_find_by_different_date_and_get_empty_list() {
         //given
         String date = "20.02.1999";
         testEntityManager.persist(getTestWeather());
@@ -231,7 +238,7 @@ class WeatherRepositoryTest {
         List<Weather> result = weatherRepository.findByDate(date);
 
         //when
-        assertEquals(0,result.size());
+        assertEquals(0, result.size());
 
 
     }

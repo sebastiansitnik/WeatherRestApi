@@ -1,16 +1,13 @@
-package java11.sda.WeatherRestApi.Weather;
+package java11.sda.WeatherRestApi.weather;
 
-import java11.sda.WeatherRestApi.Location.*;
-import java11.sda.WeatherRestApi.Location.external_api.weather_stack.LocationJsonService;
-import java11.sda.WeatherRestApi.Weather.external_api.weather_stack.WeatherJsonService;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+<<<<<<< HEAD
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+=======
+>>>>>>> develop
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 class WeatherServiceTest {

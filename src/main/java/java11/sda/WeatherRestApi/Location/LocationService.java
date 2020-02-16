@@ -1,6 +1,8 @@
-package java11.sda.WeatherRestApi.Location;
+package java11.sda.WeatherRestApi.location;
 
-import java11.sda.WeatherRestApi.Location.external_api.weather_stack.LocationJsonService;
+import java11.sda.WeatherRestApi.sorter.Sorter;
+import java11.sda.WeatherRestApi.sorter.SortingProperties;
+import java11.sda.WeatherRestApi.external_apis.ExternalApisService;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -8,26 +10,24 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-import static java11.sda.WeatherRestApi.Location.LocationSortProperties.PLACE_NAME;
-
 @Service
 public class LocationService {
 
     private final LocationRepository locationRepository;
     private final LocationDTOTransformer locationDTOTransformer;
-    private final LocationJsonService locationJsonService;
+    private final ExternalApisService externalApisService;
 
-    public LocationService(LocationRepository locationRepository, LocationDTOTransformer locationDTOTransformer, LocationJsonService locationJsonService) {
+    public LocationService(LocationRepository locationRepository, LocationDTOTransformer locationDTOTransformer, ExternalApisService externalApisService) {
         this.locationRepository = locationRepository;
         this.locationDTOTransformer = locationDTOTransformer;
-        this.locationJsonService = locationJsonService;
+        this.externalApisService = externalApisService;
     }
 
-    LocationDTO createLocationManually(LocationDTO locationDTO){
+    public LocationDTO createLocationManually(LocationDTO locationDTO) {
         Location location = locationDTOTransformer.toEntity(locationDTO);
         boolean isTaken = locationTaken(location);
 
-        if (isTaken){
+        if (isTaken) {
             throw new LocationAlreadyTakenException();
         } else {
             locationRepository.save(location);
@@ -35,12 +35,12 @@ public class LocationService {
         }
     }
 
-    LocationDTO update(LocationDTO locationDTO){
-        Location location = new Location();
+    public LocationDTO update(LocationDTO locationDTO) {
+        Location location = locationDTOTransformer.toEntity(locationDTO);
 
         boolean isTaken = locationTaken(location);
 
-        if (isTaken){
+        if (isTaken) {
             locationRepository.save(location);
             return locationDTOTransformer.toDto(location);
         } else {
@@ -48,10 +48,10 @@ public class LocationService {
         }
     }
 
-    LocationDTO delete(String id){
+    public LocationDTO delete(String id) {
 
         LocationDTO locationForDelete = findById(id);
-        if (locationForDelete == null){
+        if (locationForDelete == null) {
             throw new NoSuchElementException();
         } else {
             locationRepository.delete(locationDTOTransformer.toEntity(locationForDelete));
@@ -60,35 +60,35 @@ public class LocationService {
         return locationForDelete;
     }
 
-    public List<LocationDTO> readAll(){
+    public List<LocationDTO> readAll() {
         return locationRepository.findAll().stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
     }
 
-    private boolean locationTaken(Location location){
+    private boolean locationTaken(Location location) {
         return locationRepository.findByLatitudeAndLongitudeAndCityName(location.getLatitude(),
                 location.getLongitude(),
                 location.getCityName())
                 != null;
     }
 
-    public LocationDTO findById(String id){
+    public LocationDTO findById(String id) {
         return locationDTOTransformer.toDto(locationRepository.findById(id).orElseThrow(NoSuchElementException::new));
     }
 
-    public LocationDTO findByLatitudeAndLongitude(float latitude, float longitude){
-        Location location = locationRepository.findByLatitudeAndLongitude(latitude,longitude);
+    public LocationDTO findByLatitudeAndLongitude(float latitude, float longitude) {
+        Location location = locationRepository.findByLatitudeAndLongitude(latitude, longitude);
 
-        if (location == null){
+        if (location == null) {
             throw new NoSuchElementException();
         } else {
             return locationDTOTransformer.toDto(location);
         }
     }
 
-    private Location createLocationAutomatically(String cityName){
-        Location location = locationJsonService.getLocationFromExternalApi(cityName);
+    private Location createLocationAutomatically(String cityName) {
+        Location location = externalApisService.getLocationFromExternalApi(cityName);
 
-        if (location != null){
+        if (location != null) {
             location = locationRepository.save(location);
         } else {
             throw new NoSuchElementException("We could not find that location.");
@@ -97,13 +97,13 @@ public class LocationService {
         return location;
     }
 
-    public List<LocationDTO> findByName(String placeName){
+    public List<LocationDTO> findByName(String placeName) {
 
         List<LocationDTO> result = locationRepository.findByCityName(placeName).stream()
                 .map(locationDTOTransformer::toDto)
                 .collect(Collectors.toList());
 
-        if (result.isEmpty()){
+        if (result.isEmpty()) {
 
             Location location = createLocationAutomatically(placeName);
             result.add(locationDTOTransformer.toDto(location));
@@ -112,38 +112,22 @@ public class LocationService {
         return result;
     }
 
-    public List<LocationDTO> findByRegion(String region){
+    public List<LocationDTO> findByRegion(String region) {
         return locationRepository.findByRegion(region).stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
     }
 
-    public List<LocationDTO> findByCountry(String country){
+    public List<LocationDTO> findByCountry(String country) {
         return locationRepository.findByCountry(country).stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
     }
 
-    public List<LocationDTO> sortByCityName(boolean ascending){
+    public List<LocationDTO> sortByCityName(boolean ascending) {
 
-        String sortProperties = PLACE_NAME.property;
-        Sort sort = setupSort(sortProperties,ascending);
+        Sorter sorter = new Sorter();
+        String sortProperties = SortingProperties.SORTING_BY_CITY_NAME.property;
+        Sort sort = sorter.setupSort(sortProperties, ascending);
 
         return locationRepository.findAll(sort).stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
     }
-
-    private Sort setupSort(String property, boolean ascending){
-
-        Sort.Direction sortDirection;
-        if (ascending){
-            sortDirection = Sort.Direction.ASC;
-        } else {
-            sortDirection = Sort.Direction.DESC;
-        }
-        return Sort.by(sortDirection,property);
-
-    }
-
-
-
-
-
 
 
 }

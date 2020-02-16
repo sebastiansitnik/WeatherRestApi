@@ -1,7 +1,9 @@
-package java11.sda.WeatherRestApi.Weather;
+package java11.sda.WeatherRestApi.weather;
 
-import java11.sda.WeatherRestApi.Location.*;
-import java11.sda.WeatherRestApi.Weather.external_api.weather_stack.WeatherJsonService;
+import java11.sda.WeatherRestApi.location.*;
+import java11.sda.WeatherRestApi.sorter.Sorter;
+import java11.sda.WeatherRestApi.sorter.SortingProperties;
+import java11.sda.WeatherRestApi.external_apis.ExternalApisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -9,8 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-
-import static java11.sda.WeatherRestApi.Weather.WeatherSortingProperties.SORTING_BY_DATE;
 
 @Service
 public class WeatherService {
@@ -20,27 +20,27 @@ public class WeatherService {
     private final LocationRepository locationRepository;
     private final WeatherDTOTransformer weatherDTOTransformer;
     private final LocationDTOTransformer locationDTOTransformer;
-    private final WeatherJsonService weatherJsonService;
     private final LocationService locationService;
+    private final ExternalApisService externalApisService;
 
     @Autowired
     public WeatherService(WeatherRepository weatherRepository, LocationRepository locationRepository,
                           WeatherDTOTransformer weatherDTOTransformer, LocationDTOTransformer locationDTOTransformer,
-                          WeatherJsonService weatherJsonService, LocationService locationService) {
+                          LocationService locationService, ExternalApisService externalApisService) {
         this.weatherRepository = weatherRepository;
         this.locationRepository = locationRepository;
         this.weatherDTOTransformer = weatherDTOTransformer;
         this.locationDTOTransformer = locationDTOTransformer;
-        this.weatherJsonService = weatherJsonService;
         this.locationService = locationService;
+        this.externalApisService = externalApisService;
     }
 
 
-    public WeatherDTO create(WeatherDTO weatherDTO){
+    public WeatherDTO create(WeatherDTO weatherDTO) {
         Weather weather = weatherDTOTransformer.toEntity(weatherDTO);
 
         if (find(weather) != null) {
-            throw new IllegalArgumentException();
+            throw new WeatherAlreadyCreatedException();
         } else {
 
             String locationId = weather.getLocation().getId();
@@ -58,34 +58,34 @@ public class WeatherService {
 
     }
 
-    public List<WeatherDTO> findByDate(String date){
+    public List<WeatherDTO> findByDate(String date) {
         return weatherRepository.findByDate(date).stream()
                 .map(weatherDTOTransformer::toDto)
                 .collect(Collectors.toList());
     }
 
-    public List<WeatherDTO> findWeatherByLocation(LocationDTO locationDTO){
+    public List<WeatherDTO> findWeatherByLocation(LocationDTO locationDTO) {
         return weatherRepository.findByLocation(locationDTOTransformer.toEntity(locationDTO)).stream()
                 .map(weatherDTOTransformer::toDto)
                 .collect(Collectors.toList());
     }
 
-    public WeatherDTO findById(String id){
+    public WeatherDTO findById(String id) {
 
         return weatherDTOTransformer.toDto(weatherRepository.findById(id).orElseThrow(NoSuchElementException::new));
 
     }
 
 
-    private Weather find(Weather weather){
-        return weatherRepository.findByDateAndLocation(weather.getDate(),weather.getLocation());
+    private Weather find(Weather weather) {
+        return weatherRepository.findByDateAndLocation(weather.getDate(), weather.getLocation());
     }
 
-    private List<Weather> findByLocation(Location location){
+    private List<Weather> findByLocation(Location location) {
         return weatherRepository.findByLocation(location);
     }
 
-    public Weather findWeather(String cityName){
+    public Weather findWeather(String cityName) {
 
         Location location = new Location();
         location.setCityName(cityName);
@@ -95,8 +95,8 @@ public class WeatherService {
 
         Weather result;
 
-        if (weatherList.size() == 0){
-            result = weatherJsonService.getWeatherFromApi(cityName);
+        if (weatherList.size() == 0) {
+            result = externalApisService.getWeatherFromExternalApis(cityName);
             result.setLocation(location);
             result = weatherRepository.save(result);
         } else {
@@ -107,15 +107,15 @@ public class WeatherService {
 
     }
 
-    public List<WeatherDTO> getAll(){
+    public List<WeatherDTO> getAll() {
         return weatherRepository.findAll().stream()
                 .map(weatherDTOTransformer::toDto)
                 .collect(Collectors.toList());
     }
 
-    public WeatherDTO update(WeatherDTO weatherDTO){
+    public WeatherDTO update(WeatherDTO weatherDTO) {
         Weather weather = weatherDTOTransformer.toEntity(weatherDTO);
-        if (weatherRepository.findById(weather.getId()).isPresent()){
+        if (weatherRepository.findById(weather.getId()).isPresent()) {
             throw new NoSuchElementException();
         } else {
 
@@ -125,8 +125,8 @@ public class WeatherService {
 
     }
 
-    public WeatherDTO delete(String id){
-        if (weatherRepository.findById(id).isPresent()){
+    public WeatherDTO delete(String id) {
+        if (weatherRepository.findById(id).isPresent()) {
             throw new NoSuchElementException();
         } else {
             Weather weather = weatherRepository.findById(id).get();
@@ -136,26 +136,15 @@ public class WeatherService {
 
     }
 
-    public List<WeatherDTO> sortByDate(Boolean ascending){
-        String sortProperties = SORTING_BY_DATE.property;
+    public List<WeatherDTO> sortByDate(Boolean ascending) {
+        Sorter sorter = new Sorter();
+        String sortProperties = SortingProperties.SORTING_BY_DATE.property;
 
-        Sort sort = setupSort(sortProperties,ascending);
+        Sort sort = sorter.setupSort(sortProperties, ascending);
 
         return weatherRepository.findAll(sort).stream()
                 .map(weatherDTOTransformer::toDto)
                 .collect(Collectors.toList());
-    }
-
-    private Sort setupSort(String properties, boolean ascending){
-
-        Sort.Direction sortDirection;
-
-        if (ascending){
-            sortDirection = Sort.Direction.ASC;
-        } else {
-            sortDirection = Sort.Direction.DESC;
-        }
-        return Sort.by(sortDirection,properties);
     }
 
 

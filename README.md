@@ -1,7 +1,7 @@
 #Weather Rest Api
 
 ##Introduction
-Service design for a weather system that uses external service(weatherstack) for gathering current weather parameters at different locations and saving then on internal repository for future uses.
+Service design for a weatherStackWeather system that uses external service(weatherstack) for gathering current weatherStackWeather parameters at different locations and saving then on internal repository for future uses.
 
 ##Technology used in project
 - Spring Boot
@@ -9,7 +9,12 @@ Service design for a weather system that uses external service(weatherstack) for
 - Swagger UI
 - Maven
 
+<<<<<<< HEAD
 ##Api documentation at https://weather-rest-api.herokuapp.com/swagger-ui.html
+=======
+##How too work with it
+Service is available at https://weatherStackWeather-rest-api.herokuapp.com/
+>>>>>>> develop
 
 ##Future Tasks
 - Add tests
@@ -19,14 +24,14 @@ Service design for a weather system that uses external service(weatherstack) for
 
 ##Tasks
 ###Task 1 - Creating a base for our data
-- location
-- weather
+- weatherStackLocation
+- weatherStackWeather
 
 ###Task 2
 ####Part 1 
 Adding CRUD methods and validation for locations.
 ####Part 2
-Implementing mechanism for unique locations. There can by only one location by same name and cordinates in database. If location already exist throw error.
+Implementing mechanism for unique locations. There can by only one weatherStackLocation by same name and cordinates in database. If weatherStackLocation already exist throw error.
 ####Part 3
 Implementing mechanism for searching by id, coordinates, place name, region and country.
 ####Part 4

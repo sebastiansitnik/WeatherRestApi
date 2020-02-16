@@ -1,4 +1,4 @@
-package java11.sda.WeatherRestApi.Location;
+package java11.sda.WeatherRestApi.location;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,56 +17,54 @@ public class LocationController {
     }
 
     @PostMapping
-    public LocationDTO createLocation(@RequestBody LocationDTO location){
+    public LocationDTO createLocation(@RequestBody LocationDTO location) {
         return locationService.createLocationManually(location);
     }
 
     @GetMapping
-    public List<LocationDTO> readAllLocations(){
+    public List<LocationDTO> readAllLocations() {
         return locationService.readAll();
     }
 
     @PutMapping
-    public LocationDTO updateLocation(@RequestBody LocationDTO location){
+    public LocationDTO updateLocation(@RequestBody LocationDTO location) {
         return locationService.update(location);
     }
 
     @DeleteMapping
-    public LocationDTO deleteLocation(@RequestParam String id){
+    public LocationDTO deleteLocation(@RequestParam String id) {
         return locationService.delete(id);
     }
 
     @GetMapping("/findByCoordinates")
-    public LocationDTO findByLatitudeAndLongitude(@RequestParam long latitude, long longitude){
-        return locationService.findByLatitudeAndLongitude(latitude,longitude);
+    public LocationDTO findByLatitudeAndLongitude(@RequestParam long latitude, long longitude) {
+        return locationService.findByLatitudeAndLongitude(latitude, longitude);
     }
+
     @GetMapping("/findByCityName")
-    public List<LocationDTO> findByCityName(@RequestParam String cityName){
+    public List<LocationDTO> findByCityName(@RequestParam String cityName) {
         return locationService.findByName(cityName);
     }
 
     @GetMapping("/findByRegion")
-    public List<LocationDTO> findByRegion(@RequestParam String region){
+    public List<LocationDTO> findByRegion(@RequestParam String region) {
         return locationService.findByRegion(region);
     }
 
     @GetMapping("/findByCountry")
-    public List<LocationDTO> findByCountry(@RequestParam String country){
+    public List<LocationDTO> findByCountry(@RequestParam String country) {
         return locationService.findByCountry(country);
     }
 
     @GetMapping("/{id}")
-    public LocationDTO findById(@PathVariable String id){
+    public LocationDTO findById(@PathVariable String id) {
         return locationService.findById(id);
     }
 
     @GetMapping("/sortByCityName")
-    public List<LocationDTO> sortByCityName(@RequestParam(required = false, defaultValue = "true") boolean ascending){
+    public List<LocationDTO> sortByCityName(@RequestParam(required = false, defaultValue = "true") boolean ascending) {
         return locationService.sortByCityName(ascending);
     }
-
-
-
 
 
 }

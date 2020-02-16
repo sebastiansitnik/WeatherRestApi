@@ -1,6 +1,10 @@
-package java11.sda.WeatherRestApi.Location;
+package java11.sda.WeatherRestApi.location;
 
+<<<<<<< HEAD
 import java11.sda.WeatherRestApi.Weather.WeatherDTO;
+=======
+import java11.sda.WeatherRestApi.weather.WeatherDTO;
+>>>>>>> develop
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
