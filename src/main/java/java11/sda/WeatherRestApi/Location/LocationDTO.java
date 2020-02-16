@@ -1,7 +1,6 @@
-package java11.sda.WeatherRestApi.Location;
+package java11.sda.WeatherRestApi.location;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java11.sda.WeatherRestApi.Weather.WeatherDTO;
+import java11.sda.WeatherRestApi.weather.WeatherDTO;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

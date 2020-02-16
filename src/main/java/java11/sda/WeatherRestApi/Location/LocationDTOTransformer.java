@@ -1,6 +1,6 @@
-package java11.sda.WeatherRestApi.Location;
+package java11.sda.WeatherRestApi.location;
 
-import java11.sda.WeatherRestApi.Weather.WeatherDTOTransformer;
+import java11.sda.WeatherRestApi.weather.WeatherDTOTransformer;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -14,7 +14,7 @@ public class LocationDTOTransformer {
         this.weatherDTOTransformer = weatherDTOTransformer;
     }
 
-    public Location toEntity(LocationDTO locationDTO){
+    public Location toEntity(LocationDTO locationDTO) {
         Location location = new Location();
 
         location.setLatitude(locationDTO.getLatitude());
@@ -29,9 +29,7 @@ public class LocationDTOTransformer {
     }
 
 
-
-
-    public LocationDTO toDto(Location location){
+    public LocationDTO toDto(Location location) {
         LocationDTO locationDTO = new LocationDTO();
 
         locationDTO.setId(location.getId());
