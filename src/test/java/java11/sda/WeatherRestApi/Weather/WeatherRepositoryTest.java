@@ -119,11 +119,8 @@ class WeatherRepositoryTest {
         List<Weather> weatherList = weatherRepository.findAll();
 
         //then
-<<<<<<< HEAD
+
         assertEquals(weather,weatherList.get(0));
-=======
-        assertEquals(addedWeather, weatherList.get(0));
->>>>>>> task/4-2
 
     }
 
@@ -166,14 +163,9 @@ class WeatherRepositoryTest {
         //locationRepository.save(location);
 
         //when
-<<<<<<< HEAD
         testEntityManager.persist(weather);
         Weather searchedWeather = weatherRepository.findByDateAndLocation(date,location);
-=======
-        weatherRepository.save(weather);
-        Weather searchedWeather = weatherRepository.findByDateAndLocation(date, location);
->>>>>>> task/4-2
-        //then
+
 
         assertNull(searchedWeather);
 

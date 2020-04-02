@@ -1,11 +1,11 @@
 #Weather Rest Api
 
 ##Introduction
-Service design for a weatherStackWeather system that uses external service(weatherstack) for gathering current weatherStackWeather parameters at different locations and saving then on internal repository for future uses.
+Service design for a weatherStackWeather system that uses external service(weatherstack) for gathering current weatherStackWeather parameters at different locations and saving then on MySQL data base for future uses.
 
 ##Technology used in project
 - Spring Boot
-- H2 Database Engine
+- MySQL DataBase
 - Swagger UI
 - Maven
 
@@ -13,7 +13,6 @@ Service design for a weatherStackWeather system that uses external service(weath
 Service is available at https://weatherStackWeather-rest-api.herokuapp.com/
 
 ##Future Tasks
-- Create External Database for service uses
 - Build android application for regular user
 - build android application for admin
 
@@ -47,3 +46,7 @@ Implementing service for external api to gather data for locations and weathers.
 ###Task4 - Tests
 ####Part 1
 Repository tests implementation.
+
+###Task5 - DataBase
+####Part 1
+Adding MySQL data base for this api
