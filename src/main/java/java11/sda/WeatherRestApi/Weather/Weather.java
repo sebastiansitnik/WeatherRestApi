@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java11.sda.WeatherRestApi.location.Location;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -36,6 +33,7 @@ public class Weather {
     private String date;
 
     @ManyToOne
+    @JoinColumn
     private Location location;
 
     public Weather() {

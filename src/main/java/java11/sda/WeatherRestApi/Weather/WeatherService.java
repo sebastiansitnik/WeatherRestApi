@@ -85,7 +85,7 @@ public class WeatherService {
         return weatherRepository.findByLocation(location);
     }
 
-    public Weather findWeather(String cityName) {
+    public WeatherDTO findWeather(String cityName) {
 
         Location location = new Location();
         location.setCityName(cityName);
@@ -99,11 +99,19 @@ public class WeatherService {
             result = externalApisService.getWeatherFromExternalApis(cityName);
             result.setLocation(location);
             result = weatherRepository.save(result);
+
+            weatherList.add(result);
+            location.setWeathers(weatherList);
+            locationService.update(locationDTOTransformer.toDto(location));
+            
         } else {
             result = weatherList.get(0);
         }
 
-        return result;
+
+
+
+        return weatherDTOTransformer.toDto(result);
 
     }
 

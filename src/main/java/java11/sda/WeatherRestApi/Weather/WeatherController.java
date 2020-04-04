@@ -60,7 +60,7 @@ public class WeatherController {
     }
 
     @GetMapping("/find")
-    public Weather findWeather(@RequestParam String cityName) {
+    public WeatherDTO findWeather(@RequestParam String cityName) {
         return weatherService.findWeather(cityName);
     }
 }

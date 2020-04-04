@@ -33,7 +33,7 @@ public class Location {
     @NotEmpty
     private String country;
     @JsonIgnore
-    @OneToMany
+    @OneToMany(mappedBy = "location")
     private List<Weather> weathers = new ArrayList<>();
 
     public List<Weather> getWeathers() {
