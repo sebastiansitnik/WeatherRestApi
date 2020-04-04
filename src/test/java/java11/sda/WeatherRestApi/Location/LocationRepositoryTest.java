@@ -26,8 +26,8 @@ class LocationRepositoryTest {
         location.setCityName("Kundera");
         location.setRegion("Liptfu");
         location.setCountry("Kaldi");
-        location.setLongitude(1212);
-        location.setLatitude(123);
+        location.setLongitude("1212");
+        location.setLatitude("123");
 
         return location;
     }
@@ -65,7 +65,7 @@ class LocationRepositoryTest {
 
         //when
         testEntityManager.persist(location);
-        location.setLatitude(540);
+        location.setLatitude("540");
         testEntityManager.persist(location);
 
         //then

@@ -41,8 +41,8 @@ public class ExternalApisService {
 
         Location location = new Location();
         location.setId("1");
-        location.setLongitude(Float.parseFloat(wsrLocation.getLon()));
-        location.setLatitude(Float.parseFloat(wsrLocation.getLat()));
+        location.setLongitude(wsrLocation.getLon());
+        location.setLatitude(wsrLocation.getLat());
         location.setCityName(wsrLocation.getName());
         location.setRegion(wsrLocation.getRegion());
         location.setCountry(wsrLocation.getCountry());

@@ -17,8 +17,8 @@ public class LocationDTOTransformer {
     public Location toEntity(LocationDTO locationDTO) {
         Location location = new Location();
 
-        location.setLatitude(locationDTO.getLatitude());
-        location.setLongitude(locationDTO.getLongitude());
+        location.setLatitude(String.valueOf(locationDTO.getLatitude()));
+        location.setLongitude(String.valueOf(locationDTO.getLongitude()));
         location.setCityName(locationDTO.getCityName());
         location.setCountry(locationDTO.getCountry());
         location.setRegion(locationDTO.getRegion());
@@ -33,8 +33,8 @@ public class LocationDTOTransformer {
         LocationDTO locationDTO = new LocationDTO();
 
         locationDTO.setId(location.getId());
-        locationDTO.setLongitude(location.getLongitude());
-        locationDTO.setLatitude(location.getLatitude());
+        locationDTO.setLongitude(Float.parseFloat(location.getLongitude()));
+        locationDTO.setLatitude(Float.parseFloat(location.getLatitude()));
         locationDTO.setCityName(location.getCityName());
         locationDTO.setRegion(location.getRegion());
         locationDTO.setCountry(location.getCountry());

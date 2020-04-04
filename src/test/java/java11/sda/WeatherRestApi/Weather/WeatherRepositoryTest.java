@@ -30,8 +30,8 @@ class WeatherRepositoryTest {
         location.setCityName("Test City");
         location.setRegion("Region Test");
         location.setCountry("Test Country");
-        location.setLongitude(12);
-        location.setLatitude(30);
+        location.setLongitude("12");
+        location.setLatitude("30");
 
         weather.setLocation(testEntityManager.persist(location));
         weather.setDate("02.20.2016");
@@ -51,8 +51,8 @@ class WeatherRepositoryTest {
         location.setCityName("Test City2");
         location.setRegion("Region Test2");
         location.setCountry("Test Country2");
-        location.setLongitude(12);
-        location.setLatitude(30);
+        location.setLongitude("12");
+        location.setLatitude("30");
 
         weather.setLocation(testEntityManager.persist(location));
         weather.setDate("02.20.2020");
@@ -154,8 +154,8 @@ class WeatherRepositoryTest {
         String date = weather.getDate();
 
         Location location = new Location();
-        location.setLongitude(10);
-        location.setLongitude(2);
+        location.setLongitude("10");
+        location.setLongitude("2");
         location.setCountry("Country");
         location.setRegion("Region");
         location.setCityName("City");
@@ -202,8 +202,8 @@ class WeatherRepositoryTest {
         Weather weather = getTestWeather();
 
         Location location = new Location();
-        location.setLongitude(10);
-        location.setLongitude(2);
+        location.setLongitude("10");
+        location.setLongitude("2");
         location.setCountry("Country");
         location.setRegion("Region");
         location.setCityName("City");

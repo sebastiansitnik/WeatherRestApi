@@ -23,6 +23,13 @@ public class LocationService {
         this.externalApisService = externalApisService;
     }
 
+    public List<LocationDTO> findByLatitude(float latitude){
+
+        String latitudeInString = changeFloatToString(latitude);
+
+        return locationRepository.findByLatitude(latitudeInString).stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
+    }
+
     public LocationDTO createLocationManually(LocationDTO locationDTO) {
         Location location = locationDTOTransformer.toEntity(locationDTO);
         boolean isTaken = locationTaken(location);
@@ -75,8 +82,23 @@ public class LocationService {
         return locationDTOTransformer.toDto(locationRepository.findById(id).orElseThrow(NoSuchElementException::new));
     }
 
+    private String changeFloatToString(float before){
+        String result = String.format("%.3f", before);
+        result = result.replace(",",".");
+        return result;
+    }
+
+    public List<LocationDTO> findByLongitude(float longitude){
+        String longitudeInString = changeFloatToString(longitude);
+
+        return locationRepository.findByLongitude(longitudeInString).stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
+    }
+
     public LocationDTO findByLatitudeAndLongitude(float latitude, float longitude) {
-        Location location = locationRepository.findByLatitudeAndLongitude(latitude, longitude);
+        String latitudeInString = changeFloatToString(latitude);
+        String longitudeInString = changeFloatToString(longitude);
+
+        Location location = locationRepository.findByLatitudeAndLongitude(latitudeInString, longitudeInString);
 
         if (location == null) {
             throw new NoSuchElementException();

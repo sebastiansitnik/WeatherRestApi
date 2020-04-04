@@ -37,7 +37,7 @@ public class LocationController {
     }
 
     @GetMapping("/findByCoordinates")
-    public LocationDTO findByLatitudeAndLongitude(@RequestParam long latitude, long longitude) {
+    public LocationDTO findByLatitudeAndLongitude(@RequestParam float latitude, float longitude) {
         return locationService.findByLatitudeAndLongitude(latitude, longitude);
     }
 
@@ -54,6 +54,16 @@ public class LocationController {
     @GetMapping("/findByCountry")
     public List<LocationDTO> findByCountry(@RequestParam String country) {
         return locationService.findByCountry(country);
+    }
+
+    @GetMapping("/findByLatitude")
+    public List<LocationDTO> findByLatitude(@RequestParam float latitude){
+        return locationService.findByLatitude(latitude);
+    }
+
+    @GetMapping("/findByLongitude")
+    public List<LocationDTO> findByLongitude(@RequestParam float longitude){
+        return locationService.findByLongitude(longitude);
     }
 
     @GetMapping("/{id}")

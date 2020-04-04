@@ -13,9 +13,12 @@ public interface LocationRepository extends JpaRepository<Location, String> {
 
     List<Location> findByCountry(String country);
 
-    Location findByLatitudeAndLongitudeAndCityName(float latitude, float longitude, String cityName);
+    Location findByLatitudeAndLongitudeAndCityName(String latitude, String longitude, String cityName);
+    List<Location> findByLatitude(String latitude);
+    List<Location> findByLongitude(String longitude);
 
-    Location findByLatitudeAndLongitude(float latitude, float longitude);
+
+    Location findByLatitudeAndLongitude(String latitude, String longitude);
 
 
 }
