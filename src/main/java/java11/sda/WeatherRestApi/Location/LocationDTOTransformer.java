@@ -17,8 +17,8 @@ public class LocationDTOTransformer {
     public Location toEntity(LocationDTO locationDTO) {
         Location location = new Location();
 
-        location.setLatitude(String.valueOf(locationDTO.getLatitude()));
-        location.setLongitude(String.valueOf(locationDTO.getLongitude()));
+        location.setLatitude(changeFloatToString(locationDTO.getLatitude()));
+        location.setLongitude(changeFloatToString(locationDTO.getLongitude()));
         location.setCityName(locationDTO.getCityName());
         location.setCountry(locationDTO.getCountry());
         location.setRegion(locationDTO.getRegion());
@@ -26,6 +26,12 @@ public class LocationDTOTransformer {
         location.setId(locationDTO.getId());
 
         return location;
+    }
+
+    private String changeFloatToString(float before){
+        String result = String.format("%.3f", before);
+        result = result.replace(",",".");
+        return result;
     }
 
 

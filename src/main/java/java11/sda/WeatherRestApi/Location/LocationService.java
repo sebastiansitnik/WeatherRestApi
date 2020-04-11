@@ -3,6 +3,8 @@ package java11.sda.WeatherRestApi.location;
 import java11.sda.WeatherRestApi.sorter.Sorter;
 import java11.sda.WeatherRestApi.sorter.SortingProperties;
 import java11.sda.WeatherRestApi.external_apis.ExternalApisService;
+import java11.sda.WeatherRestApi.weather.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +18,15 @@ public class LocationService {
     private final LocationRepository locationRepository;
     private final LocationDTOTransformer locationDTOTransformer;
     private final ExternalApisService externalApisService;
+    private final WeatherRepository weatherRepository;
 
-    public LocationService(LocationRepository locationRepository, LocationDTOTransformer locationDTOTransformer, ExternalApisService externalApisService) {
+    @Autowired
+    public LocationService(LocationRepository locationRepository, LocationDTOTransformer locationDTOTransformer, ExternalApisService externalApisService,
+                           WeatherRepository weatherRepository) {
         this.locationRepository = locationRepository;
         this.locationDTOTransformer = locationDTOTransformer;
         this.externalApisService = externalApisService;
+        this.weatherRepository = weatherRepository;
     }
 
     public List<LocationDTO> findByLatitude(float latitude){
@@ -34,11 +40,12 @@ public class LocationService {
         Location location = locationDTOTransformer.toEntity(locationDTO);
         boolean isTaken = locationTaken(location);
 
+
         if (isTaken) {
             throw new LocationAlreadyTakenException();
         } else {
-            locationRepository.save(location);
-            return locationDTOTransformer.toDto(location);
+            Location locationAdded = locationRepository.save(location);
+            return locationDTOTransformer.toDto(locationAdded);
         }
     }
 
@@ -57,12 +64,12 @@ public class LocationService {
 
     public LocationDTO delete(String id) {
 
-        LocationDTO locationForDelete = findById(id);
-        if (locationForDelete == null) {
-            throw new NoSuchElementException();
-        } else {
-            locationRepository.delete(locationDTOTransformer.toEntity(locationForDelete));
-        }
+        LocationDTO locationForDelete = findById(id);;
+
+        List<Weather> locationWeathers = weatherRepository.findByLocation(locationDTOTransformer.toEntity(locationForDelete));
+        locationWeathers.forEach(weatherRepository::delete);
+
+        locationRepository.delete(locationDTOTransformer.toEntity(locationForDelete));
 
         return locationForDelete;
     }
@@ -79,7 +86,7 @@ public class LocationService {
     }
 
     public LocationDTO findById(String id) {
-        return locationDTOTransformer.toDto(locationRepository.findById(id).orElseThrow(NoSuchElementException::new));
+        return locationDTOTransformer.toDto(locationRepository.getOne(id));
     }
 
     private String changeFloatToString(float before){
@@ -107,16 +114,19 @@ public class LocationService {
         }
     }
 
-    private Location createLocationAutomatically(String cityName) {
-        Location location = externalApisService.getLocationFromExternalApi(cityName);
-
-        if (location != null) {
-            location = locationRepository.save(location);
-        } else {
+    public LocationDTO createLocationAutomatically(LocationDTO locationDTO) {
+        Location location = externalApisService.getLocationFromExternalApi(locationDTO.getCityName());
+        if (location == null){
             throw new NoSuchElementException("We could not find that location.");
+        } else {
+            if (locationTaken(location)){
+                throw new LocationAlreadyTakenException();
+            } else {
+                location = locationRepository.save(location);
+            }
         }
 
-        return location;
+        return locationDTOTransformer.toDto(location);
     }
 
     public List<LocationDTO> findByName(String placeName) {
@@ -127,14 +137,18 @@ public class LocationService {
 
         if (result.isEmpty()) {
 
-            Location location = createLocationAutomatically(placeName);
-            result.add(locationDTOTransformer.toDto(location));
+            LocationDTO locationDTO = new LocationDTO();
+            locationDTO.setCityName(placeName);
+
+            LocationDTO newLocationDTO = createLocationAutomatically(locationDTO);
+            result.add(newLocationDTO);
 
         }
         return result;
     }
 
     public List<LocationDTO> findByRegion(String region) {
+
         return locationRepository.findByRegion(region).stream().map(locationDTOTransformer::toDto).collect(Collectors.toList());
     }
 

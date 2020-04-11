@@ -17,8 +17,13 @@ public class LocationController {
     }
 
     @PostMapping
-    public LocationDTO createLocation(@RequestBody LocationDTO location) {
-        return locationService.createLocationManually(location);
+    public LocationDTO createLocation(@RequestBody LocationDTO locationDTO) {
+        return locationService.createLocationManually(locationDTO);
+    }
+
+    @PostMapping("/addByExternalApi")
+    public LocationDTO addLocationByExternalApi(@RequestBody LocationDTO locationDTO){
+        return locationService.createLocationAutomatically(locationDTO);
     }
 
     @GetMapping
@@ -27,8 +32,8 @@ public class LocationController {
     }
 
     @PutMapping
-    public LocationDTO updateLocation(@RequestBody LocationDTO location) {
-        return locationService.update(location);
+    public LocationDTO updateLocation(@RequestBody LocationDTO locationDTO) {
+        return locationService.update(locationDTO);
     }
 
     @DeleteMapping
