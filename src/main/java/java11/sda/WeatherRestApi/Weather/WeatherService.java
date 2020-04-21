@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -17,18 +20,16 @@ public class WeatherService {
 
 
     private final WeatherRepository weatherRepository;
-    private final LocationRepository locationRepository;
     private final WeatherDTOTransformer weatherDTOTransformer;
     private final LocationDTOTransformer locationDTOTransformer;
     private final LocationService locationService;
     private final ExternalApisService externalApisService;
 
     @Autowired
-    public WeatherService(WeatherRepository weatherRepository, LocationRepository locationRepository,
+    public WeatherService(WeatherRepository weatherRepository,
                           WeatherDTOTransformer weatherDTOTransformer, LocationDTOTransformer locationDTOTransformer,
                           LocationService locationService, ExternalApisService externalApisService) {
         this.weatherRepository = weatherRepository;
-        this.locationRepository = locationRepository;
         this.weatherDTOTransformer = weatherDTOTransformer;
         this.locationDTOTransformer = locationDTOTransformer;
         this.locationService = locationService;
@@ -39,17 +40,16 @@ public class WeatherService {
     public WeatherDTO create(WeatherDTO weatherDTO) {
         Weather weather = weatherDTOTransformer.toEntity(weatherDTO);
 
-        if (find(weather) != null) {
+        if (findByLocationAndDate(weather) != null) {
             throw new WeatherAlreadyCreatedException();
         } else {
 
             String locationId = weather.getLocation().getId();
-            Location location = locationRepository.findById(locationId).orElseThrow(NoSuchElementException::new);
+
+            Location location = locationDTOTransformer.toEntity(locationService.findById(locationId));
 
             weather.setLocation(location);
-            weatherRepository.save(weather);
-            location.getWeathers().add(weather);
-            locationRepository.save(location);
+            weather = weatherRepository.save(weather);
 
             return weatherDTOTransformer.toDto(weather);
 
@@ -70,48 +70,71 @@ public class WeatherService {
                 .collect(Collectors.toList());
     }
 
-    public WeatherDTO findById(String id) {
+    public List<WeatherDTO> findWeatherByLocationName(String locationName){
 
-        return weatherDTOTransformer.toDto(weatherRepository.findById(id).orElseThrow(NoSuchElementException::new));
+        return weatherRepository.findByLocationCityName(locationName).stream().map(weatherDTOTransformer::toDto).collect(Collectors.toList());
 
     }
 
+    public WeatherDTO findById(String id) {
+        return weatherDTOTransformer.toDto(weatherRepository.findById(id).orElseThrow(NoWeatherWithID::new));
+    }
 
-    private Weather find(Weather weather) {
-        return weatherRepository.findByDateAndLocation(weather.getDate(), weather.getLocation());
+
+    private Weather findByLocationAndDate(Weather weather) {
+        List<Weather> weathers = weatherRepository.findByDateAndLocation(weather.getDate(), weather.getLocation());
+
+        if (weathers.size() == 0){
+            weather = null;
+        } else {
+            weather = weathers.get(0);
+        }
+
+        return weather;
     }
 
     private List<Weather> findByLocation(Location location) {
         return weatherRepository.findByLocation(location);
     }
 
-    public WeatherDTO findWeather(String cityName) {
+    public WeatherDTO addWeatherFromExternalApi(String cityName) {
 
         Location location = new Location();
         location.setCityName(cityName);
         List<Location> locationList = locationService.findByName(cityName).stream().map(locationDTOTransformer::toEntity).collect(Collectors.toList());
         location = locationList.get(0);
+        if (location == null){
+            location = externalApisService.getLocationFromExternalApi(cityName);
+            if (location == null){
+                throw new NoLocationInDataBase();
+            }
+        }
         List<Weather> weatherList = findByLocation(location);
 
         Weather result;
 
-        if (weatherList.size() == 0) {
-            result = externalApisService.getWeatherFromExternalApis(cityName);
-            result.setLocation(location);
-            result = weatherRepository.save(result);
+        result = externalApisService.getWeatherFromExternalApis(cityName);
+        result.setLocation(location);
 
-            weatherList.add(result);
-            location.setWeathers(weatherList);
-            locationService.update(locationDTOTransformer.toDto(location));
-            
-        } else {
-            result = weatherList.get(0);
+        if (weatherList.size() != 0) {
+
+            for (Weather w: weatherList) {
+                if (w.getDate().equals(result.getDate())){
+                    throw new WeatherAlreadyCreatedException();
+                }
+            }
+
         }
 
+        weatherList.add(result);
+        location.setWeathers(weatherList);
+        locationService.update(locationDTOTransformer.toDto(location));
+        result = weatherRepository.save(result);
 
 
 
         return weatherDTOTransformer.toDto(result);
+
 
     }
 
@@ -123,24 +146,23 @@ public class WeatherService {
 
     public WeatherDTO update(WeatherDTO weatherDTO) {
         Weather weather = weatherDTOTransformer.toEntity(weatherDTO);
-        if (weatherRepository.findById(weather.getId()).isPresent()) {
-            throw new NoSuchElementException();
-        } else {
 
-            weatherRepository.save(weather);
-            return weatherDTOTransformer.toDto(weather);
-        }
+        findById(weather.getId());
+
+        weather = weatherRepository.save(weather);
+
+        return weatherDTOTransformer.toDto(weather);
 
     }
 
     public WeatherDTO delete(String id) {
-        if (weatherRepository.findById(id).isPresent()) {
-            throw new NoSuchElementException();
-        } else {
-            Weather weather = weatherRepository.findById(id).get();
-            weatherRepository.delete(weather);
-            return weatherDTOTransformer.toDto(weather);
-        }
+
+        WeatherDTO weatherDTO = findById(id);
+        Weather weather = weatherDTOTransformer.toEntity(weatherDTO);
+
+        weatherRepository.delete(weather);
+
+        return weatherDTOTransformer.toDto(weather);
 
     }
 

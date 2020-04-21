@@ -1,14 +1,24 @@
 package java11.sda.WeatherRestApi.weather;
 
 import java11.sda.WeatherRestApi.location.Location;
+import java11.sda.WeatherRestApi.location.LocationRepository;
+import java11.sda.WeatherRestApi.location.LocationService;
+import java11.sda.WeatherRestApi.location.NoLocationInDataBase;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class WeatherDTOTransformer {
 
+    private final LocationRepository locationRepository;
+
+    @Autowired
+    public WeatherDTOTransformer(LocationRepository locationRepository) {
+        this.locationRepository = locationRepository;
+    }
+
     public Weather toEntity(WeatherDTO weatherDTO) {
-        Location location = new Location();
-        location.setId(weatherDTO.getLocationId());
+        Location location = locationRepository.findById(weatherDTO.getLocationId()).orElseThrow(NoLocationInDataBase::new);
 
         Weather weather = new Weather();
         weather.setTemperature(weatherDTO.getTemperature());

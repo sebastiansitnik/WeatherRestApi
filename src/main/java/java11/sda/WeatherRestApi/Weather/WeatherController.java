@@ -39,6 +39,11 @@ public class WeatherController {
         return weatherService.delete(id);
     }
 
+    @GetMapping("/findByLocationName")
+    public List<WeatherDTO> findByLocationName(@RequestParam String locationName) {
+        return weatherService.findWeatherByLocationName(locationName);
+    }
+
     @GetMapping("/findByLocation")
     public List<WeatherDTO> findByLocation(@RequestBody LocationDTO location) {
         return weatherService.findWeatherByLocation(location);
@@ -54,13 +59,13 @@ public class WeatherController {
         return weatherService.findByDate(date);
     }
 
-    @GetMapping("/getAllSorted")
+    @GetMapping("/getAllSortedByDate")
     public List<WeatherDTO> getAllSorted(@RequestParam(required = false, defaultValue = "true") boolean ascending) {
         return weatherService.sortByDate(ascending);
     }
 
-    @GetMapping("/find")
-    public WeatherDTO findWeather(@RequestParam String cityName) {
-        return weatherService.findWeather(cityName);
+    @GetMapping("/addFromExternalApi")
+    public WeatherDTO addFromExternalApi(@RequestParam String cityName) {
+        return weatherService.addWeatherFromExternalApi(cityName);
     }
 }

@@ -139,8 +139,8 @@ class WeatherRepositoryTest {
         testEntityManager.persist(weather1);
         testEntityManager.persist(weather2);
 
-        Weather searchedWeather1 = weatherRepository.findByDateAndLocation(date1, location1);
-        Weather searchedWeather2 = weatherRepository.findByDateAndLocation(date2, location2);
+        Weather searchedWeather1 = weatherRepository.findByDateAndLocation(date1, location1).get(0);
+        Weather searchedWeather2 = weatherRepository.findByDateAndLocation(date2, location2).get(0);
 
         // then
         assertEquals(weather1, searchedWeather1);
@@ -164,7 +164,7 @@ class WeatherRepositoryTest {
 
         //when
         testEntityManager.persist(weather);
-        Weather searchedWeather = weatherRepository.findByDateAndLocation(date,location);
+        Weather searchedWeather = weatherRepository.findByDateAndLocation(date,location).get(0);
 
         //then
 
