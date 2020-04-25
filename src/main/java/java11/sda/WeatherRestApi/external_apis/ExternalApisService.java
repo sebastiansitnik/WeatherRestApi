@@ -1,11 +1,9 @@
 package java11.sda.WeatherRestApi.external_apis;
 
+import java11.sda.WeatherRestApi.external_apis.weather_stack_api.*;
 import java11.sda.WeatherRestApi.location.Location;
+import java11.sda.WeatherRestApi.location.NoLocationInDataBase;
 import java11.sda.WeatherRestApi.weather.Weather;
-import java11.sda.WeatherRestApi.external_apis.weather_stack_api.WeatherStackApi;
-import java11.sda.WeatherRestApi.external_apis.weather_stack_api.WeatherStackLocation;
-import java11.sda.WeatherRestApi.external_apis.weather_stack_api.WeatherStackResponse;
-import java11.sda.WeatherRestApi.external_apis.weather_stack_api.WeatherStackWeather;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -37,10 +35,18 @@ public class ExternalApisService {
 
     public Location getLocationFromExternalApi(String cityName) {
         WeatherStackResponse wsr = getResponseFromWeatherStack(cityName);
-        WeatherStackLocation wsrLocation = wsr.getWeatherStackLocation();
 
+        return createLocation(wsr);
+    }
+
+    private Location createLocation(WeatherStackResponse wsr){
+        if (wsr.getWeatherStackLocation() == null){
+            throw new NoLocationInExternalApi();
+        }
+
+        WeatherStackLocation wsrLocation = wsr.getWeatherStackLocation();
         Location location = new Location();
-        location.setId("1");
+        location.setId(defaultID);
         location.setLongitude(wsrLocation.getLon());
         location.setLatitude(wsrLocation.getLat());
         location.setCityName(wsrLocation.getName());
@@ -54,6 +60,8 @@ public class ExternalApisService {
         WeatherStackResponse wsr = getResponseFromWeatherStack(cityName);
         WeatherStackWeather wsrWeather = wsr.getWeatherStackWeather();
 
+        Location location = createLocation(wsr);
+
         Weather weather = new Weather();
         weather.setTemperature(Float.parseFloat(wsrWeather.getTemperature()));
         weather.setPressure(Float.parseFloat(wsrWeather.getPressure()));
@@ -61,6 +69,7 @@ public class ExternalApisService {
         weather.setWindDirection(wsrWeather.getWindDir());
         weather.setWindSpeed(Float.parseFloat(wsrWeather.getWindSpeed()));
         weather.setDate(wsr.getWeatherStackLocation().getLocaltime());
+        weather.setLocation(location);
 
         return weather;
     }
@@ -72,6 +81,7 @@ public class ExternalApisService {
 
     private final static String targetCharForReplacement = " ";
     private final static String replacement = "%20";
+    private final static String defaultID = "1";
 
 
 }

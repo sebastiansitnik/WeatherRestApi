@@ -13,7 +13,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(value = NoSuchElementException.class)
     public ResponseEntity<Object> thereIsNoSuchElementInDataBase(NoSuchElementException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("There is no such element in data base", HttpStatus.NOT_FOUND);
     }
 
 
