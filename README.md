@@ -1,6 +1,7 @@
 #Weather Rest Api
 
 ##Introduction
+
 Service design for a Weather Api that uses external service(weatherstack) for gathering current weather parameters at different locations and saving then on MySQL data base for future uses.
 
 ##Technology used in project
