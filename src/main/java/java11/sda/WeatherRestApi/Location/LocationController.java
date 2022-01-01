@@ -51,7 +51,7 @@ public class LocationController {
         return locationService.findByLatitudeAndLongitude(latitude, longitude);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://127.0.0.1:5500")
     @GetMapping("/findByCityName")
     public List<LocationDTO> findByCityName(@RequestParam String cityName) {
         return locationService.findByName(cityName);
